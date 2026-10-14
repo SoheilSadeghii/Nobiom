@@ -16,6 +16,12 @@ namespace Nobiom.Web.Controllers
         {
             return View();
         }
+
+        [Route("Contact-Us")]
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
     }
 }
 
