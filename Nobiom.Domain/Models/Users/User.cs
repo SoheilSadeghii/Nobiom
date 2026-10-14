@@ -13,11 +13,11 @@ namespace Nobiom.Domain.Models.Users
 
         public string? LastName { get; set; }
 
-        public string UserName { get; set; }
+        public string UserName { get; set; } = string.Empty;
 
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
-        public int EmailActiveCode { get; set; }
+        public string? EmailActiveCode { get; set; }
 
         public bool IsEmailActive { get; set; }
 
@@ -25,7 +25,7 @@ namespace Nobiom.Domain.Models.Users
 
         public int MobileActiveCode { get; set; }
 
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
         public string? Avatar { get; set; }
 
