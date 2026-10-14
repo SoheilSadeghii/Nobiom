@@ -1,1 +1,17 @@
-<Solution />
+<Solution>
+  <Folder Name="/Application/">
+    <Project Path="Nobiom.Application/Nobiom.Application.csproj" Id="45cd92e4-c528-4a6a-ae6f-f69660197484" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="Nobiom.Domain/Nobiom.Domain.csproj" Id="e5cd95b1-8ad4-4276-bb22-75c2f8b73373" />
+  </Folder>
+  <Folder Name="/Infra.Data/">
+    <Project Path="Nobiom.Infra.Data/Nobiom.Infra.Data.csproj" Id="3c5d3137-3c8e-4c33-9a01-1fbba1ee1a36" />
+  </Folder>
+  <Folder Name="/Infra.IOC/">
+    <Project Path="Nobiom.Infra.IOC/Nobiom.Infra.IOC.csproj" Id="6286cbe3-18d3-46b3-8293-19b0acbecfd5" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Nobiom.Web/Nobiom.Web.csproj" Id="76421cd8-dd81-4e1d-9225-0a8c37f640c9" />
+  </Folder>
+</Solution>
