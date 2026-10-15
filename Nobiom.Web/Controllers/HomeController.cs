@@ -4,7 +4,7 @@ using System;
 namespace Nobiom.Web.Controllers
 {
     [Mapco]
-    public class Home : Controller
+    public class HomeController : Controller
     {
         public IActionResult Index()
         {
