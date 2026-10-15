@@ -31,7 +31,11 @@ namespace Nobiom.Domain.Models.Users
 
         public bool IsActive { get; set; }
 
+        #endregion
 
+        #region Relations
+
+        public ICollection<UserAddress>? Addresses { get; set; }
 
         #endregion
     }

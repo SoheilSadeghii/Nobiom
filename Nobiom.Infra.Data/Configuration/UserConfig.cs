@@ -30,7 +30,13 @@ namespace Nobiom.Infra.Data.Configuration
 
             #region Relaitions
 
+            #region Relations
 
+            builder.HasMany(u => u.Addresses)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
+
+            #endregion
 
             #endregion
         }

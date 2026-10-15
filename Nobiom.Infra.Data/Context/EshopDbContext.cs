@@ -13,6 +13,8 @@ namespace Nobiom.Infra.Data.Context
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<UserAddress> UserAddresses { get; set; }
+
         #endregion
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
