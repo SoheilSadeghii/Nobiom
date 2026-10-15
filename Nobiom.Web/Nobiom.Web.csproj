@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Nobiom.Domain\Nobiom.Domain.csproj" />
 		<ProjectReference Include="..\Nobiom.Infra.Data\Nobiom.Infra.Data.csproj" />
+		<ProjectReference Include="..\Nobiom.Infra.IOC\Nobiom.Infra.IOC.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

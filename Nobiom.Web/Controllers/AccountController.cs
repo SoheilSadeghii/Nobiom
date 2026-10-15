@@ -8,13 +8,13 @@ namespace Nobiom.Web.Controllers
     {
         #region Register
 
+        [Route("Register")]
         public IActionResult Register()
         {
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost("Register"), ValidateAntiForgeryToken]
         public IActionResult Register(RegisterViewModel register)
         {
             if (!ModelState.IsValid)
