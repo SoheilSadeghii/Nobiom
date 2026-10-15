@@ -1,7 +1,19 @@
+using Microsoft.EntityFrameworkCore;
+using Nobiom.Infra.Data.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+#region Add DB Context
+
+builder.Services.AddDbContext<EshopDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EshopConnection"));
+});
+
+#endregion
 
 var app = builder.Build();
 
