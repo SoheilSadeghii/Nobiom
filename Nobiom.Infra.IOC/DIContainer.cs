@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Nobiom.Application.Services.Implementation;
+using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Contracts;
 using Nobiom.Infra.Data.Repositories;
 using System;
@@ -19,7 +21,7 @@ namespace Nobiom.Infra.IOC
 
             #region Services
 
-
+            services.AddScoped<IAccountService, AccountService>();
 
             #endregion
         }

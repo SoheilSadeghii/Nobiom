@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Nobiom.Domain\Nobiom.Domain.csproj" />
+    <ProjectReference Include="..\Nobiom.Infra.Data\Nobiom.Infra.Data.csproj" />
+  </ItemGroup>
+
 </Project>
