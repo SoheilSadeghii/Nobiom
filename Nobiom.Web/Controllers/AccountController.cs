@@ -45,7 +45,7 @@ namespace Nobiom.Web.Controllers
             switch (result)
             {
                 case RegisterUserResult.Success:
-                    return View("SuccessRegister");
+                    return View("SuccessRegister", register);
 
                 case RegisterUserResult.EmailDuplicated:
                     ModelState.AddModelError("Email", "ایمیل وارد شده تکراری است");

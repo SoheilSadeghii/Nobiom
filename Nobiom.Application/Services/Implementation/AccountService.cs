@@ -30,7 +30,7 @@ namespace Nobiom.Application.Services.Implementation
                 return RegisterUserResult.EmailDuplicated;
             }
 
-            if (await _userRepository.IsExistUserNameAsync(model.UserName.FixEmail()))
+            if (await _userRepository.IsExistUserNameAsync(model.UserName.FixUserName()))
             {
                 return RegisterUserResult.UserNameDuplicated;
             }

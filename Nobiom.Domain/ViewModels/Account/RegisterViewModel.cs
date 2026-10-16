@@ -12,6 +12,8 @@ namespace Nobiom.Domain.ViewModels.Account
         [DisplayName("نام کاربری")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(100, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
+        [RegularExpression(@"^[a-zA-Z0-9]+$", 
+            ErrorMessage = "{0} فقط می‌تواند شامل حروف انگلیسی و اعداد باشد")]
         public string UserName { get; set; } = string.Empty;
 
         [DisplayName("ایمیل")]
@@ -24,6 +26,8 @@ namespace Nobiom.Domain.ViewModels.Account
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [MaxLength(100, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد")]
         [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", 
+            ErrorMessage = "رمز عبور باید حداقل ۸ کاراکتر باشد و شامل حرف بزرگ، حرف کوچک، عدد و یکی از نمادهای #?!@$%^&*- باشد.")]
         public string Password { get; set; } = string.Empty;
 
         [DisplayName("تکرار کلمه عبور")]
