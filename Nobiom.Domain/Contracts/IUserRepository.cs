@@ -13,6 +13,8 @@ namespace Nobiom.Domain.Contracts
         Task UpdateAsync(User user);
         Task DeleteAsync(User user);
         Task DeleteAsync(int userId);
+        Task<bool> IsExistUserNameAsync(string userName);
+        Task<bool> IsExistEmailAsync(string email);
         Task SaveAsync();
 
     }

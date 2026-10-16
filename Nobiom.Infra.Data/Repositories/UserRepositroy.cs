@@ -47,6 +47,16 @@ namespace Nobiom.Infra.Data.Repositories
             context.Users.Update(user);
         }
 
+        public async Task<bool> IsExistUserNameAsync(string userName)
+        {
+            return await context.Users.AnyAsync(u => u.UserName == userName);
+        }
+
+        public async Task<bool> IsExistEmailAsync(string email)
+        {
+            return await context.Users.AnyAsync(u => u.Email == email);
+        }
+
         public async Task SaveAsync()
         {
             await context.SaveChangesAsync();

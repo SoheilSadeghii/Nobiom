@@ -1,4 +1,5 @@
-﻿using Nobiom.Domain.ViewModels.Account;
+﻿using Nobiom.Domain.Enums;
+using Nobiom.Domain.ViewModels.Account;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,6 @@ namespace Nobiom.Application.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<bool> RegisterAsync(RegisterViewModel model);
+        Task<RegisterUserResult> RegisterAsync(RegisterViewModel model);
     }
 }
