@@ -1,4 +1,5 @@
 ﻿using Nobiom.Application.Extensions;
+using Nobiom.Application.Mapper;
 using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Contracts;
 using Nobiom.Domain.Enums;
@@ -36,17 +37,7 @@ namespace Nobiom.Application.Services.Implementation
 
             #endregion
 
-            User user = new User()
-            {
-                UserName = model.UserName.FixUserName(),
-                Email = model.Email.FixEmail(),
-                Avatar = "NoPhoto.jpg",
-                CreateDate = DateTime.Now,
-                EmailActiveCode = Guid.NewGuid().ToString().Replace("-", ""),
-                IsActive = true,
-                IsEmailActive = false,
-                Password = model.Password
-            };
+            var user = UserMapper.MapToUser(model);
 
             await _userRepository.CreateAsync(user);
             await _userRepository.SaveAsync();
