@@ -70,6 +70,18 @@ namespace Nobiom.Web.Controllers
             return View();
         }
 
+        #endregion
+
+        #region Activation Email
+
+        [Route("VerifyEmail/{activeCode}")]
+        public async Task<IActionResult> ActiveAccount(string activeCode)
+        {
+            ViewBag.ActiveAccount = await _accountService.ActiveAccountAsync(activeCode);
+
+
+            return View();
+        }
 
         #endregion
     }

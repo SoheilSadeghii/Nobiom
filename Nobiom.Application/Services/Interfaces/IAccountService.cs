@@ -9,5 +9,6 @@ namespace Nobiom.Application.Services.Interfaces
     public interface IAccountService
     {
         Task<RegisterUserResult> RegisterAsync(RegisterViewModel model);
+        Task<bool> ActiveAccountAsync(string activeCode);
     }
 }

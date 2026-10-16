@@ -57,6 +57,11 @@ namespace Nobiom.Infra.Data.Repositories
             return await context.Users.AnyAsync(u => u.Email == email);
         }
 
+        public async Task<User?> GetUserByActiveCodeAsync(string activeCode)
+        {
+            return await context.Users.SingleOrDefaultAsync(u => u.EmailActiveCode == activeCode);
+        }
+
         public async Task SaveAsync()
         {
             await context.SaveChangesAsync();

@@ -1,4 +1,5 @@
 ﻿using Nobiom.Application.Extensions;
+using Nobiom.Application.Generators;
 using Nobiom.Application.Mapper;
 using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Contracts;
@@ -14,6 +15,7 @@ namespace Nobiom.Application.Services.Implementation
     public class AccountService(IUserRepository _userRepository)
         : IAccountService
     {
+
         public async Task<RegisterUserResult> RegisterAsync(RegisterViewModel model)
         {
             #region Validations
@@ -43,6 +45,21 @@ namespace Nobiom.Application.Services.Implementation
             await _userRepository.SaveAsync();
 
             return RegisterUserResult.Success;
+        }
+
+        public async Task<bool> ActiveAccountAsync(string activeCode)
+        {
+            var user = await _userRepository.GetUserByActiveCodeAsync(activeCode);
+
+            if (user == null) return false;
+
+            user.IsEmailActive = true;
+            user.EmailActiveCode = NameGenerator.GenerateUniqName();
+
+            await _userRepository.UpdateAsync(user);
+            await _userRepository.SaveAsync();
+
+            return true;
         }
     }
 }
