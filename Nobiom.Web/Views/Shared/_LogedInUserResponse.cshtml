@@ -1,0 +1,47 @@
+﻿@if (!User.Identity.IsAuthenticated)
+{
+    <div class="user-option user-option--account">
+        <div class="user-option-btn user-option-btn--account" style="border: 1px solid #e0e0e0; border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+            <i class="ri-login-box-line icon fs-5"></i>
+            <span class="d-flex align-items-center gap-2">
+                <a asp-controller="Account" asp-action="Login"
+                   class="text-decoration-none text-dark login-link"
+                   style="transition: all 0.2s ease;"
+                   onmouseover="this.style.color='#0d6efd'; this.style.fontWeight='bold';"
+                   onmouseout="this.style.color='#212529'; this.style.fontWeight='normal';">
+                    ورود
+                </a>
+                <span class="text-muted">|</span>
+                <a asp-controller="Account" asp-action="Register"
+                   class="text-decoration-none text-dark login-link"
+                   style="transition: all 0.2s ease;"
+                   onmouseover="this.style.color='#0d6efd'; this.style.fontWeight='bold';"
+                   onmouseout="this.style.color='#212529'; this.style.fontWeight='normal';">
+                    ثبت نام
+                </a>
+            </span>
+        </div>
+    </div>
+}
+else
+{
+    <div class="user-options">
+        <div class="user-option">
+            <a href="#" class="user-option-btn user-option-btn--account">
+                <i class="ri-user-fill icon"></i>
+            </a>
+        </div>
+        <div class="user-option">
+            <a href="#" class="user-option-btn user-option-btn--account">
+                <i class="ri-heart-3-fill icon"></i>
+                <span class="counter">۲</span>
+            </a>
+        </div>
+        <div class="user-option user-option--cart">
+            <a href="#" class="user-option-btn user-option-btn--cart">
+                <i class="ri-shopping-bag-2-fill icon"></i>
+                <span class="counter">۴</span>
+            </a>
+        </div>
+    </div>
+}
