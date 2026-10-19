@@ -1,4 +1,6 @@
-﻿using Nobiom.Domain.Enums;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics.Internal;
+using Nobiom.Domain.Enums;
+using Nobiom.Domain.Models.Users;
 using Nobiom.Domain.ViewModels.Account;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,8 @@ namespace Nobiom.Application.Services.Interfaces
     public interface IAccountService
     {
         Task<RegisterUserResult> RegisterAsync(RegisterViewModel model);
+        Task<LoginUserResult> LoginAsync(LoginViewModel model);
         Task<bool> ActiveAccountAsync(string activeCode);
+        Task<User?> GetUserByEmailOrUserNameAsync(string emailOrUsername);
     }
 }

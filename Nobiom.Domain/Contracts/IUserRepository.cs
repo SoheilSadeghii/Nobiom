@@ -19,6 +19,8 @@ namespace Nobiom.Domain.Contracts
 
         Task<User?> GetUserByActiveCodeAsync(string activeCode);
 
+        Task<User?>GetUserByUserNameOrEmailAsync(string userNameOrEmail);
+
         Task SaveAsync();
 
     }

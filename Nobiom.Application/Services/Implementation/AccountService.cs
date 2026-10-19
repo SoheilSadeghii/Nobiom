@@ -4,11 +4,12 @@ using Nobiom.Application.Mapper;
 using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Contracts;
 using Nobiom.Domain.Enums;
-using Nobiom.Domain.Models.Users;
+using Nobiom.Application.Security;
 using Nobiom.Domain.ViewModels.Account;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Nobiom.Domain.Models.Users;
 
 namespace Nobiom.Application.Services.Implementation
 {
@@ -60,6 +61,24 @@ namespace Nobiom.Application.Services.Implementation
             await _userRepository.SaveAsync();
 
             return true;
+        }
+
+        public async Task<LoginUserResult> LoginAsync(LoginViewModel model)
+        {
+            var user = await _userRepository.GetUserByUserNameOrEmailAsync(model.UserNameOrEmail);
+
+            if (user == null) return LoginUserResult.NotFound;
+
+            if (!PasswordHasher.VerifyPassword(model.Password, user.Password)) return LoginUserResult.NotFound;
+
+            if (!user.IsEmailActive) return LoginUserResult.NotActivated;
+
+            return LoginUserResult.Success;
+        }
+
+        public async Task<User?> GetUserByEmailOrUserNameAsync(string emailOrUsername)
+        {
+            return await _userRepository.GetUserByUserNameOrEmailAsync(emailOrUsername);
         }
     }
 }
