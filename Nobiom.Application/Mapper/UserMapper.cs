@@ -1,4 +1,4 @@
-﻿using Nobiom.Application.Extensions;
+﻿using Nobiom.Application.TextFixer;
 using Nobiom.Application.Generators;
 using Nobiom.Application.Security;
 using Nobiom.Domain.Models.Users;

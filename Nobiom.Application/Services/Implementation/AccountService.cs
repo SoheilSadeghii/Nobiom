@@ -1,4 +1,4 @@
-﻿using Nobiom.Application.Extensions;
+﻿using Nobiom.Application.TextFixer;
 using Nobiom.Application.Generators;
 using Nobiom.Application.Mapper;
 using Nobiom.Application.Services.Interfaces;

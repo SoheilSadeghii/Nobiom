@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Nobiom.Application.Extensions
+namespace Nobiom.Application.TextFixer
 {
     public static class FixText
     {
