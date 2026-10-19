@@ -91,13 +91,15 @@ namespace Nobiom.Web.Controllers
         #region Login
 
         [Route("Login")]
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl = "/")
         {
+            ViewBag.ReturnUrl = ReturnUrl;
+
             return View();
         }
 
         [HttpPost("Login"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel login)
+        public async Task<IActionResult> Login(LoginViewModel login, string ReturnUrl)
         {
             if (!ModelState.IsValid)
             {
@@ -144,7 +146,9 @@ namespace Nobiom.Web.Controllers
 
             await HttpContext.SignInAsync(principal, properties);
 
-            return Redirect("Home/Index");
+            if (Url.IsLocalUrl(ReturnUrl)) return Redirect(ReturnUrl);
+
+            return View("/");
         }
 
         #endregion
