@@ -2,11 +2,23 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Nobiom.Infra.Data.Context;
 using Nobiom.Infra.IOC;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+#region Config Unicode
+
+builder.Services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[]
+{
+    UnicodeRanges.BasicLatin,
+    UnicodeRanges.Arabic
+}));
+
+#endregion
 
 #region Add DB Context
 
@@ -25,7 +37,7 @@ builder.Services.RegisterServices();
 
 #region Authentication
 
-builder.Services.AddAuthentication(options=>
+builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -58,7 +70,8 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-// Map area routes
+#region Config Routes
+
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
@@ -68,5 +81,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
+#endregion
 
 app.Run();
