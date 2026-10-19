@@ -84,5 +84,26 @@ namespace Nobiom.Web.Controllers
         }
 
         #endregion
+
+        #region Login
+
+        [Route("Login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost("Login"), ValidateAntiForgeryToken]
+        public IActionResult Login(LoginViewModel login)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(login);
+            }
+
+            return View();
+        }
+
+        #endregion
     }
 }
