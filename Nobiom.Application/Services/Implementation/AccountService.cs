@@ -69,6 +69,8 @@ namespace Nobiom.Application.Services.Implementation
 
             if (user == null) return LoginUserResult.NotFound;
 
+            if (user.IsDeleted) return LoginUserResult.NotFound;
+
             if (!PasswordHasher.VerifyPassword(model.Password, user.Password)) return LoginUserResult.NotFound;
 
             if (!user.IsEmailActive) return LoginUserResult.NotActivated;

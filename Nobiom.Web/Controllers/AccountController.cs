@@ -99,7 +99,7 @@ namespace Nobiom.Web.Controllers
         }
 
         [HttpPost("Login"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel login, string ReturnUrl)
+        public async Task<IActionResult> Login(LoginViewModel login, string ReturnUrl = "/")
         {
             if (!ModelState.IsValid)
             {
