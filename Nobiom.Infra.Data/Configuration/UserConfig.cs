@@ -26,6 +26,10 @@ namespace Nobiom.Infra.Data.Configuration
             builder.Property(u => u.Password).IsRequired().HasMaxLength(400);
             builder.Property(u => u.EmailActiveCode).HasMaxLength(50);
 
+            builder.HasIndex(u => u.Email).IsUnique();
+            builder.HasIndex(u => u.UserName).IsUnique();
+            builder.HasIndex(u => u.Mobile).IsUnique();
+
             #endregion
 
             #region Relaitions
