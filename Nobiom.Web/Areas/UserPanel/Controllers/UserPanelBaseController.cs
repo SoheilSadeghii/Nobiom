@@ -7,9 +7,5 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
     [Authorize]
     public class UserPanelBaseController : Controller
     {
-        public IActionResult Index()
-        {
-            return Content("Hello from UserPanel!");
-        }
     }
 }
