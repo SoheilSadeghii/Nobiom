@@ -19,5 +19,10 @@ namespace Nobiom.Domain.ViewModels.Account
 
         [Display(Name = "مرا به خاطر بسپار")]
         public bool RememberMe { get; set; }
+
+        public string? ImageData { get; set; } = string.Empty;
+        [Display(Name =("عبارت امنیتی"))]
+        [Required(ErrorMessage ="لطفا {0} را وارد کنید")]
+        public string CaptchaAnswer { get; set; }
     }
 }

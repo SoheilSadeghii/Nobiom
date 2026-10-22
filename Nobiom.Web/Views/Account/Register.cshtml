@@ -33,23 +33,19 @@
             <!-- end of form-element -->
             <!-- start of form-element -->
             <div class="form-element-row">
-                <div class=" mb-3">
-                    با ورود و یا ثبت نام در سایت شما <a href="#" class="link">
-                    شرایط و
-                    قوانین
-                </a> استفاده
-                از تمام سرویس های
-                سایت و <a href="#" class="link">قوانین حریم خصوصی</a> آن را می‌پذیرید.
+                <div class="mb-3">
+                    با ورود و یا ثبت نام در سایت شما <a href="#" class="link">شرایط وقوانین</a> استفاده
+                    از تمام سرویس های
+                    سایت و <a href="#" class="link">قوانین حریم خصوصی</a> آن را می‌پذیرید.
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
             </div>
-            <div asp-validation-summary="All" class="text-danger"></div>
-        </div>
-        <!-- end of form-element -->
-    </form>
-    <!-- end of auth-form -->
-</div>
+            <!-- end of form-element -->
+        </form>
+        <!-- end of auth-form -->
+    </div>
 </div>
 <!-- end of auth-box -->
-
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />

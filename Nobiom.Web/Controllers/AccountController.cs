@@ -1,20 +1,39 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ASPSnippets.Core.Captcha;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Enums;
 using Nobiom.Domain.ViewModels.Account;
-using System.Runtime;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace Nobiom.Web.Controllers
 {
     public class AccountController : Controller
     {
+
         #region Fields 
 
         private readonly IAccountService _accountService;
 
+
+        #endregion
+
+        #region Create Captcha
+
+        public Captcha captcha
+        {
+            get
+            {
+                return JsonConvert.DeserializeObject<Captcha>(TempData["Captcha"]?.ToString() ?? "{}");
+            }
+            set
+            {
+                TempData["Captcha"] = JsonConvert.SerializeObject(value);
+            }
+        }
 
         #endregion
 
@@ -93,9 +112,14 @@ namespace Nobiom.Web.Controllers
         [Route("Login")]
         public IActionResult Login(string ReturnUrl = "/")
         {
+            captcha = new Captcha(90, 46, 22.5f, "#FFFFFF", "#2962ff", Mode.Arithmetic);
+
             ViewBag.ReturnUrl = ReturnUrl;
 
-            return View();
+            return View(new LoginViewModel()
+            {
+                ImageData = this.captcha.ImageData
+            });
         }
 
         [HttpPost("Login"), ValidateAntiForgeryToken]
@@ -106,10 +130,24 @@ namespace Nobiom.Web.Controllers
                 return View(login);
             }
 
+            if (!captcha.IsValid(login.CaptchaAnswer))
+            {
+                captcha = new Captcha(90, 46, 22.5f, "#FFFFFF", "#2962ff", Mode.Arithmetic);
+                ModelState.AddModelError("CaptchaAnswer", "کد امنیتی وارد شده اشتباه است");
+
+                login.ImageData = this.captcha.ImageData;
+
+                return View(login);
+            }
+
             var result = await _accountService.LoginAsync(login);
 
             if (result == LoginUserResult.NotFound)
             {
+                captcha = new Captcha(90, 46, 22.5f, "#FFFFFF", "#2962ff", Mode.Arithmetic);
+
+                login.ImageData = this.captcha.ImageData;
+
                 ModelState.AddModelError("", "نام کاربری یا ایمیل وارد شده اشتباه است");
 
                 return View(login);
@@ -117,6 +155,10 @@ namespace Nobiom.Web.Controllers
 
             if (result == LoginUserResult.NotActivated)
             {
+                captcha = new Captcha(90, 46, 22.5f, "#FFFFFF", "#2962ff", Mode.Arithmetic);
+
+                login.ImageData = this.captcha.ImageData;
+
                 ViewBag.UserNotActivated = true;
 
                 return View(login);
@@ -126,9 +168,9 @@ namespace Nobiom.Web.Controllers
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim("FullName",$"{user.FirstName}:{user.LastName}"),
+                new Claim("FullName", $"{user.FirstName}:{user.LastName}"),
                 new Claim(ClaimTypes.Email, user.Email),
             };
 

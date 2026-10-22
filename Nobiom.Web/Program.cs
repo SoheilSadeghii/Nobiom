@@ -3,12 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Nobiom.Infra.Data.Context;
 using Nobiom.Infra.IOC;
 using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        var converter = new JsonStringEnumConverter();
+        options.JsonSerializerOptions.Converters.Add(converter);
+    });
 
 #region Config Unicode
 
