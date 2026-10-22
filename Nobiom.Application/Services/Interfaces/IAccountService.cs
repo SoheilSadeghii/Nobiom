@@ -14,5 +14,6 @@ namespace Nobiom.Application.Services.Interfaces
         Task<LoginUserResult> LoginAsync(LoginViewModel model);
         Task<bool> ActiveAccountAsync(string activeCode);
         Task<User?> GetUserByEmailOrUserNameAsync(string emailOrUsername);
+        Task<bool> ChangeUserPassword(ChangePasswordViewModel model, int userId );
     }
 }

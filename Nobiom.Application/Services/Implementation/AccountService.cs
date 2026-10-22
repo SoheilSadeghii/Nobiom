@@ -82,5 +82,21 @@ namespace Nobiom.Application.Services.Implementation
         {
             return await _userRepository.GetUserByUserNameOrEmailAsync(emailOrUsername);
         }
+
+        public async Task<bool> ChangeUserPassword(ChangePasswordViewModel model, int userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            if (user == null) throw new Exception("کاربر یافت نشد");
+
+            if (!PasswordHasher.VerifyPassword(model.OldPassword, user.Password)) return false;
+
+            user.Password = PasswordHasher.EncodePasswordMd5(model.Password);
+
+            await _userRepository.UpdateAsync(user);
+            await _userRepository.SaveAsync();
+
+            return true;
+        }
     }
 }
