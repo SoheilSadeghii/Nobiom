@@ -1,11 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nobiom.Application.Security;
+using Nobiom.Infra.Data.Context;
 using System;
 
 namespace Nobiom.Web.Controllers
 {
-    [Mapco]
     public class HomeController : Controller
     {
+        //private readonly EshopDbContext _context;
+        //public HomeController(EshopDbContext context)
+        //{
+        //    _context = context;
+        //    var user = context.Users.FirstOrDefault();
+        //    user.Password = PasswordHasher.EncodePasswordMd5("123");
+        //    _context.SaveChanges();
+        //}
         public IActionResult Index()
         {
             return View();
@@ -22,15 +31,5 @@ namespace Nobiom.Web.Controllers
         {
             return View();
         }
-    }
-}
-
-namespace Nobiom.Web
-{
-    [AttributeUsage(AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
-    public sealed class MapcoAttribute : Attribute
-    {
-        public MapcoAttribute() { }
-        // add properties/ctors here if you need configuration
     }
 }
