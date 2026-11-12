@@ -1,0 +1,123 @@
+﻿@using System.Security.Claims
+@using Nobiom.Domain.ViewModels.Account
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "ویراش پروفایل";
+}
+
+<div class="ui-box bg-white mb-5">
+    <div class="ui-box-title">اطلاعات شخصی</div>
+    <div class="ui-box-content">
+        <form asp-action="Index" enctype="multipart/form-data" method="post" class="auth-form">
+            <div class="row">
+                <input type="hidden" asp-for="Avatar" />
+                <div class="col-lg-3 mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName"
+                          class="text-danger"></span>
+                </div>
+                <div class="col-lg-3 mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName"
+                          class="text-danger"></span>
+                </div>
+                <div class="col-lg-3 mb-3">
+                    <label asp-for="UserName" class="form-label"></label>
+                    <input asp-for="UserName" class="form-control" placeholder="" />
+                    <span asp-validation-for="UserName"
+                          class="text-danger"></span>
+                </div>
+                <div class="col-lg-3 mb-3">
+                    <label asp-for="NationalCode" class="form-label"></label>
+                    <input asp-for="NationalCode" class="form-control" />
+                    <span asp-validation-for="NationalCode"
+                          class="text-danger"></span>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <label class="form-label">تاریخ تولد</label>
+                    <div class="d-flex gap-2">
+                        <!-- Day Field -->
+                        <div class="flex-fill">
+                            <input asp-for="Day" type="number" class="form-control text-center" placeholder="روز" maxlength="2" />
+                            <span asp-validation-for="Day" class="text-danger"></span>
+                        </div>
+
+                        <!-- Month Field -->
+                        <div class="flex-fill">
+                            <input asp-for="Month" type="number" class="form-control text-center" placeholder="ماه" maxlength="2" />
+                            <span asp-validation-for="Month" class="text-danger"></span>
+                        </div>
+
+                        <!-- Year Field -->
+                        <div class="flex-fill">
+                            <input asp-for="Year" type="number" class="form-control text-center" placeholder="سال" maxlength="4" />
+                            <span asp-validation-for="Year" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-3">
+                    <label asp-for="Avatar" class="form-label"></label>
+
+                    <div class="d-flex align-items-center gap-3 p-3 border rounded">
+
+                        <!-- Avatar Preview -->
+                        <div class="flex-shrink-0">
+                            <img id="imgAvatar"
+                                 src="/Avatars/@Model.Avatar"
+                                 alt="Avatar Preview"
+                                 class="rounded-circle border"
+                                 style="width: 80px; height: 80px; object-fit: cover;" />
+                        </div>
+
+                        <!-- File Input -->
+                        <div class="flex-grow-1">
+                            <input asp-for="Avatar"
+                                   id="AvatarUp"
+                                   name="imgAvatar"
+                                   onchange="ShowImage(this);"
+                                   type="file"
+                                   class="form-control"
+                                   accept="image/png,image/jpeg,image/webp" />
+
+                            <small class="text-muted d-block mt-2">
+                                فرمت‌های مجاز: PNG، JPG و WEBP
+                            </small>
+
+                            @if (ViewBag.ValidateImage != null)
+                            {
+                                <div class="alert alert-danger mt-2">
+                                    فرمت تصویر انتخاب‌شده معتبر نیست.
+                                </div>
+                            }
+
+                            <span asp-validation-for="Avatar"
+                                  class="text-danger"></span>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="ui-box-title">اطلاعات تماس</div>
+                <div class="col-lg-6 mb-3">
+                    <label asp-for="Mobile" class="form-label"></label>
+                    <input asp-for="Mobile" class="form-control" />
+                    <span asp-validation-for="Mobile"
+                          class="text-danger"></span>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" value="@User.FindFirst(ClaimTypes.Email)?.Value" />
+                    <span asp-validation-for="Email"
+                          class="text-danger"></span>
+                </div>
+                <div class="col-12 mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        ذخیره تغییرات
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

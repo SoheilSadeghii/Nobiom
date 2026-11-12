@@ -25,6 +25,10 @@ namespace Nobiom.Domain.Models.Users
 
         public int MobileActiveCode { get; set; }
 
+        public string? NationalCode { get; set; }
+
+        public DateOnly? BirthDate { get; set; }
+
         public string Password { get; set; } = string.Empty;
 
         public string? Avatar { get; set; }

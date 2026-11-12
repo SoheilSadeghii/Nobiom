@@ -12,3 +12,40 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        function ShowImage(input) {
+
+            if (input.files && input.files[0]) {
+
+                const file = input.files[0];
+
+                const allowedTypes = [
+                    'image/png',
+                    'image/jpeg',
+                    'image/webp'
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert('فرمت تصویر معتبر نیست.');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#imgAvatar').attr('src', e.target.result);
+                };
+
+                reader.onerror = function() {
+                    alert('خطا در بارگذاری تصویر.');
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+}

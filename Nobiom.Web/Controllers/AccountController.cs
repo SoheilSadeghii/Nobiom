@@ -170,13 +170,19 @@ namespace Nobiom.Web.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim("FullName", $"{user.FirstName}:{user.LastName}"),
+                new Claim("FullName", $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Email, user.Email),
             };
 
-            if (!string.IsNullOrWhiteSpace(user.Mobile))
+            if (!string.IsNullOrWhiteSpace(user.Mobile) &&
+                !string.IsNullOrWhiteSpace(user.FirstName) &&
+                !string.IsNullOrWhiteSpace(user.LastName) &&
+                !string.IsNullOrWhiteSpace(user.Avatar))
             {
                 claims.Add(new Claim(ClaimTypes.MobilePhone, user.Mobile));
+                claims.Add(new Claim("FirstName", user.FirstName));
+                claims.Add(new Claim("LastName", user.LastName));
+                claims.Add(new Claim("Avatar", user.Avatar));
             }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -23,6 +23,8 @@ namespace Nobiom.Infra.Data.Configuration
             builder.Property(u => u.LastName).HasMaxLength(200);
             builder.Property(u => u.UserName).IsRequired().HasMaxLength(200);
             builder.Property(u => u.Email).IsRequired().HasMaxLength(200);
+            builder.Property(u => u.NationalCode).HasMaxLength(200);
+            builder.Property(u => u.BirthDate).HasColumnType("date");
             builder.Property(u => u.Password).IsRequired().HasMaxLength(400);
             builder.Property(u => u.EmailActiveCode).HasMaxLength(50);
 

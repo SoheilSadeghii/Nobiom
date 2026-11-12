@@ -25,5 +25,18 @@ namespace Nobiom.Application.Converter
                 pc.GetHour(date).ToString("00") + ":" +
                 pc.GetMinute(date).ToString("00");
         }
+
+        public static DateTime ToMiladi(this string date)
+        {
+            var parts = date.Split('/');
+            var pc = new PersianCalendar();
+
+            return pc.ToDateTime(
+                int.Parse(parts[0]),
+                int.Parse(parts[1]),
+                int.Parse(parts[2]),
+                0, 0, 0, 0
+            );
+        }
     }
 }

@@ -1,16 +1,40 @@
 ﻿@using System.Security.Claims
+
 <div class="ui-sticky ui-sticky-top">
     <div class="profile-user-info py-3 ui-box bg-white">
         <div class="profile-detail">
             <div class="d-flex align-items-center">
                 <div class="profile-avatar me-3">
-                    <img src="/theme-assets/images/avatar/default.png" alt="avatar">
+                    <img src="/Avatars/@(User.FindFirst("Avatar")?.Value.ToString() ?? "default.png")"
+                         alt="Avatar Preview"
+                         class="rounded-circle border"
+                         style="width: 50; height: 50; object-fit: cover;">
                 </div>
                 <div class="profile-info">
-                    <a href="#" class="text-decoration-none text-dark fw-bold mb-2">
-                        @User.Identity.Name
+                    @{
+                        var firstName = User.FindFirst("FirstName")?.Value;
+                        var displayName = !string.IsNullOrWhiteSpace(firstName) ? firstName : User.Identity?.Name ?? "کاربر";
+
+                        var hour = DateTime.Now.Hour;
+
+                        var greeting = hour switch
+                        {
+                            >= 5 and < 12 => "صبح بخیر",
+                            >= 12 and < 15 => "ظهر بخیر",
+                            >= 15 and < 19 => "عصر بخیر",
+                            >= 19 and < 23 => "شب بخیر",
+                            _ => "شب خوش"
+                        };
+                    }
+
+                    <a asp-area="UserPanel"
+                       class="text-decoration-none text-dark fw-bold mb-2">
+                        @greeting، @displayName
                     </a>
-                    <div class="text-muted fs-7 fw-bold">@(User.FindFirst(ClaimTypes.MobilePhone)?.Value ?? "شماره تلفن ثبت نشده.")</div>
+
+                    <div class="text-muted fs-7 fw-bold">
+                        @(User.FindFirst(ClaimTypes.MobilePhone)?.Value ?? "شماره تلفن ثبت نشده.")
+                    </div>
                 </div>
             </div>
             <div class="user-options">
@@ -33,6 +57,12 @@
                 <a class="nav-link" asp-area="UserPanel" asp-controller="Profile" asp-action="ChangePassword">
                     <i class="nav-link-icon ri-lock-password-line"></i>
                     تغییر کلمه عبور
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="UserPanel" asp-controller="Profile" asp-action="Index">
+                    <i class="nav-link-icon ri-user-2-line"></i>
+                    ویرایش پروفایل
                 </a>
             </li>
             <li class="nav-item">

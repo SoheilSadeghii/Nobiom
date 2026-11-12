@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Nobiom.Application.Services.Interfaces;
-using Nobiom.Domain.Enums;
+using Nobiom.Application.Converter;
 using Nobiom.Domain.ViewModels.Account;
 using System.Security.Claims;
+using Nobiom.Application.Security;
+using Nobiom.Application.Generators;
 
 namespace Nobiom.Web.Areas.UserPanel.Controllers
 {
@@ -23,6 +25,75 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
 
         #endregion
 
+        #region Edit Profile
+
+        public async Task<IActionResult> Index()
+        {
+            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var model = await _accountService.GetUserProfileAsync(currentUserId);
+
+            if (model == null) return NotFound();
+
+            if (model.Year.HasValue && model.Month.HasValue && model.Day.HasValue)
+            {
+                var birthDate = new DateTime(model.Year.Value, model.Month.Value, model.Day.Value);
+
+                var shamsiDate = birthDate.ToShamsi();
+                var parts = shamsiDate.Split('/');
+
+                model.Year = int.Parse(parts[0]);
+                model.Month = int.Parse(parts[1]);
+                model.Day = int.Parse(parts[2]);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(ProfileViewModel model, IFormFile? imgAvatar)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            if (imgAvatar != null)
+            {
+                if (!imgAvatar.ImageValidate())
+                {
+                    ViewBag.ValidateImage = false;
+
+                    return View(model);
+                }
+
+                if (model.Avatar != "default.png")
+                {
+                    string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Avatars", model.Avatar);
+
+                    if (System.IO.File.Exists(deletePath)) System.IO.File.Delete(deletePath);
+
+                }
+
+                string avatarName = NameGenerator.GenerateUniqName() + Path.GetExtension(imgAvatar.FileName);
+
+                string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Avatars", avatarName);
+                using (var stream = System.IO.File.Create(savePath))
+                {
+                    imgAvatar.CopyTo(stream);
+                }
+
+                model.Avatar = avatarName;
+            }
+
+            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
+
+            await _accountService.EditUserProfileAsync(model, currentUserId);
+
+            TempData["SuccessEditProfile"] = "True";
+
+            return Redirect("/UserPanel");
+        }
+
+        #endregion
+
         #region Change Password
 
         [Route("Change-Password")]
@@ -34,7 +105,7 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
         [HttpPost("Change-Password"), ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
 
             var result = await _accountService.ChangeUserPassword(model, currentUserId);
 

@@ -1,15 +1,16 @@
-﻿using Nobiom.Application.TextFixer;
+﻿using Nobiom.Application.Converter;
 using Nobiom.Application.Generators;
 using Nobiom.Application.Mapper;
+using Nobiom.Application.Security;
 using Nobiom.Application.Services.Interfaces;
+using Nobiom.Application.TextFixer;
 using Nobiom.Domain.Contracts;
 using Nobiom.Domain.Enums;
-using Nobiom.Application.Security;
+using Nobiom.Domain.Models.Users;
 using Nobiom.Domain.ViewModels.Account;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Nobiom.Domain.Models.Users;
 
 namespace Nobiom.Application.Services.Implementation
 {
@@ -94,6 +95,72 @@ namespace Nobiom.Application.Services.Implementation
             user.Password = PasswordHasher.EncodePasswordMd5(model.Password);
 
             await _userRepository.UpdateAsync(user);
+            await _userRepository.SaveAsync();
+
+            return true;
+        }
+
+        public async Task<ProfileViewModel?> GetUserProfileAsync(int userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            if (user == null) return null;
+
+            return new ProfileViewModel()
+            {
+                Avatar = user.Avatar,
+                FirstName = user.FirstName ?? string.Empty,
+                LastName = user.LastName ?? string.Empty,
+                Mobile = user.Mobile ?? string.Empty,
+                NationalCode = user.NationalCode,
+                Year = user.BirthDate?.Year,
+                Month = user.BirthDate?.Month,
+                Day = user.BirthDate?.Day,
+                Email = user.Email,
+                UserName = user.UserName
+            };
+        }
+
+        public async Task<bool> IsCompleteProfileAsync(int userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            if (user == null) return false;
+
+            if (user.Mobile != null && user.Mobile != "")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> EditUserProfileAsync(ProfileViewModel model, int userId)
+        {
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            if (user == null) return false;
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.UserName = model.UserName;
+            user.Mobile = model.Mobile;
+            user.NationalCode = model.NationalCode;
+            user.Mobile = model.Mobile;
+            if (!string.IsNullOrWhiteSpace(model.Email)) user.Email = model.Email;
+            user.Avatar = model.Avatar;
+
+            if (model.Year.HasValue &&
+                model.Month.HasValue &&
+                model.Day.HasValue)
+            {
+                var shamsiDate = $"{model.Year}/{model.Month:00}/{model.Day:00}";
+
+                user.BirthDate = DateOnly.FromDateTime(shamsiDate.ToMiladi());
+            }
+
+            await _userRepository.UpdateAsync(user);
+
             await _userRepository.SaveAsync();
 
             return true;
