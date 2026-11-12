@@ -20,13 +20,13 @@ namespace Nobiom.Web.Controllers
             return View();
         }
 
-        [Route("About-Us")]
+        //[Route("About-Us")]
         public IActionResult AboutUs()
         {
             return View();
         }
 
-        [Route("Contact-Us")]
+        //[Route("Contact-Us")]
         public IActionResult ContactUs()
         {
             return View();

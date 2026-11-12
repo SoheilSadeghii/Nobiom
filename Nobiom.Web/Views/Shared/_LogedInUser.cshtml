@@ -6,7 +6,7 @@
             <div class="user-option-btn user-option-btn--account" style="border: 1px solid #e0e0e0; border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
                 <i class="ri-login-box-line icon fs-5"></i>
                 <span class="d-flex align-items-center gap-2">
-                    <a asp-controller="Account" asp-action="Login"
+                    <a asp-area="" asp-controller="Account" asp-action="Login"
                        class="user-option-btn user-option-btn--account"
                        style="transition: all 0.2s ease;"
                        onmouseover="this.style.color='#0d6efd'; this.style.fontWeight='bold';"
@@ -14,7 +14,7 @@
                         ورود
                     </a>
                     <span class="text-muted">|</span>
-                    <a asp-controller="Account" asp-action="Register"
+                    <a asp-area="" asp-controller="Account" asp-action="Register"
                        class="user-option-btn user-option-btn--account"
                        style="transition: all 0.2s ease;"
                        onmouseover="this.style.color='#0d6efd'; this.style.fontWeight='bold';"
@@ -28,7 +28,8 @@
     else
     {
         <div class="user-option user-option--account">
-            <a asp-area="UserPanel" class="user-option-btn user-option-btn--account">
+            <a asp-area="UserPanel" asp-controller="Home" asp-action="Index"
+               class="user-option-btn user-option-btn--account">
                 <i class="ri-user-fill icon"></i>
                 <i class="ri-arrow-down-s-fill icon fs-7 text-muted"></i>
             </a>
@@ -59,7 +60,7 @@
                                     };
                                 }
 
-                                <a asp-area="UserPanel"
+                                <a asp-area="UserPanel" asp-controller="Home" asp-action="Index"
                                    class="text-decoration-none text-dark fw-bold mb-2">
                                     @greeting، @displayName
                                 </a>
@@ -97,7 +98,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Logout">
+                            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">
                                 <i class="nav-link-icon ri-logout-box-r-line"></i>
                                 خروج
                             </a>
