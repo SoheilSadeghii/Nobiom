@@ -7,7 +7,6 @@ using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Enums;
 using Nobiom.Domain.ViewModels.Account;
 using System.Security.Claims;
-using System.Text.Json.Serialization;
 
 namespace Nobiom.Web.Controllers
 {

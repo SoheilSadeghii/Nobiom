@@ -1,6 +1,6 @@
-﻿@using System.Security.Claims
+﻿@using Nobiom.Application.Extensions
 <div class="user-options">
-    @if (!User.Identity.IsAuthenticated)
+    @if (!(User.Identity?.IsAuthenticated ?? false))
     {
         <div class="user-option user-option--account">
             <div class="user-option-btn user-option-btn--account" style="border: 1px solid #e0e0e0; border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
@@ -38,15 +38,15 @@
                     <div class="profile-detail">
                         <div class="d-flex align-items-center">
                             <div class="profile-avatar me-3">
-                                <img src="/Avatars/@(User.FindFirst("Avatar")?.Value.ToString() ?? "default.png")"
+                                <img src="/Avatars/@User.GetAvatar()"
                                      alt="Avatar Preview"
                                      class="rounded-circle border"
                                      style="width: 50px; height: 50px; object-fit: cover;">
                             </div>
                             <div class="profile-info">
                                 @{
-                                    var firstName = User.FindFirst("FirstName")?.Value;
-                                    var displayName = !string.IsNullOrWhiteSpace(firstName) ? firstName : User.Identity?.Name ?? "کاربر";
+                                    var firstName = User.GetFirstName();
+                                    var displayName = !string.IsNullOrWhiteSpace(firstName) ? firstName : User.GetUserName() ?? "کاربر";
 
                                     var hour = DateTime.Now.Hour;
 
@@ -66,7 +66,7 @@
                                 </a>
 
                                 <div class="text-muted fs-7 fw-bold">
-                                    @(User.FindFirst(ClaimTypes.MobilePhone)?.Value ?? "شماره تلفن ثبت نشده.")
+                                    @User.GetMobile()
                                 </div>
                             </div>
                         </div>

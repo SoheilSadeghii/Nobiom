@@ -1,4 +1,4 @@
-﻿@if (!User.Identity.IsAuthenticated)
+﻿@if (!(User.Identity?.IsAuthenticated ?? false))
 {
     <div class="user-option user-option--account">
         <div class="user-option-btn user-option-btn--account" style="border: 1px solid #e0e0e0; border-radius: 12px; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">

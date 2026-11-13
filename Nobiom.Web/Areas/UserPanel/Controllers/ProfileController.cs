@@ -2,9 +2,9 @@
 using Nobiom.Application.Services.Interfaces;
 using Nobiom.Application.Converter;
 using Nobiom.Domain.ViewModels.Account;
-using System.Security.Claims;
 using Nobiom.Application.Security;
 using Nobiom.Application.Generators;
+using Nobiom.Application.Extensions;
 
 namespace Nobiom.Web.Areas.UserPanel.Controllers
 {
@@ -29,7 +29,7 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
 
         public async Task<IActionResult> Index()
         {
-            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            int currentUserId = int.Parse(User.GetUserId()!);
 
             var model = await _accountService.GetUserProfileAsync(currentUserId);
 
@@ -83,7 +83,7 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
                 model.Avatar = avatarName;
             }
 
-            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
+            int currentUserId = int.Parse(User.GetUserId()!);
 
             await _accountService.EditUserProfileAsync(model, currentUserId);
 
@@ -105,7 +105,7 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
         [HttpPost("Change-Password"), ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
-            int currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
+            int currentUserId = int.Parse(User.GetUserId()!);
 
             var result = await _accountService.ChangeUserPassword(model, currentUserId);
 

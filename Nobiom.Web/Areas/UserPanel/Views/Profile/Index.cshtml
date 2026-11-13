@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+﻿@using Nobiom.Application.Extensions
 @using Nobiom.Domain.ViewModels.Account
 @model ProfileViewModel
 @{
@@ -108,7 +108,7 @@
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label asp-for="Email" class="form-label"></label>
-                    <input asp-for="Email" class="form-control" value="@User.FindFirst(ClaimTypes.Email)?.Value" />
+                    <input asp-for="Email" class="form-control" value="@User.GetEmail()" />
                     <span asp-validation-for="Email"
                           class="text-danger"></span>
                 </div>

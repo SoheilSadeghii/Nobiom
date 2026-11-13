@@ -1,19 +1,20 @@
 ﻿@using System.Security.Claims
+@using Nobiom.Application.Extensions
 
 <div class="ui-sticky ui-sticky-top">
     <div class="profile-user-info py-3 ui-box bg-white">
         <div class="profile-detail">
             <div class="d-flex align-items-center">
                 <div class="profile-avatar me-3">
-                    <img src="/Avatars/@(User.FindFirst("Avatar")?.Value.ToString() ?? "default.png")"
+                    <img src="/Avatars/@(User.GetAvatar() ?? "default.png")"
                          alt="Avatar Preview"
                          class="rounded-circle border"
                          style="width: 50; height: 50; object-fit: cover;">
                 </div>
                 <div class="profile-info">
                     @{
-                        var firstName = User.FindFirst("FirstName")?.Value;
-                        var displayName = !string.IsNullOrWhiteSpace(firstName) ? firstName : User.Identity?.Name ?? "کاربر";
+                        var firstName = User.GetFirstName();
+                        var displayName = !string.IsNullOrWhiteSpace(firstName) ? firstName : User.GetUserName() ?? "کاربر";
 
                         var hour = DateTime.Now.Hour;
 
@@ -33,7 +34,7 @@
                     </a>
 
                     <div class="text-muted fs-7 fw-bold">
-                        @(User.FindFirst(ClaimTypes.MobilePhone)?.Value ?? "شماره تلفن ثبت نشده.")
+                        @(User.GetMobile())
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Nobiom.Application.Extensions;
 using Nobiom.Application.Services.Interfaces;
-using System.Security.Claims;
 
 namespace Nobiom.Web.Components
 {
@@ -23,7 +23,7 @@ namespace Nobiom.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {    
-            int userId = int.Parse(HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier).ToString());
+            int userId = int.Parse(HttpContext.User.GetUserId()!);
 
             bool model = await _accountService.IsCompleteProfileAsync(userId);
 
