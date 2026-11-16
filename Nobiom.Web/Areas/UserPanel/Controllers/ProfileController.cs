@@ -51,10 +51,17 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
             return View(model);
         }
 
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ProfileViewModel model, IFormFile? imgAvatar)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
+
+            int currentUserId = int.Parse(User.GetUserId()!);
+
+            string? newAvatarPath = null;
+            string oldAvatar = model.Avatar;
 
             #region Avatar
 
@@ -63,45 +70,71 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
                 if (!imgAvatar.ImageValidate())
                 {
                     ViewBag.ValidateImage = false;
-
                     return View(model);
                 }
 
-                if (model.Avatar != "default.png")
+                string avatarName = NameGenerator.GenerateUniqName()
+                                    + Path.GetExtension(imgAvatar.FileName);
+
+                newAvatarPath = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "Avatars",
+                    avatarName);
+
+                try
                 {
-                    string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Avatars", model.Avatar);
+                    await using (var stream = new FileStream(
+                        newAvatarPath,
+                        FileMode.CreateNew,
+                        FileAccess.Write,
+                        FileShare.None))
+                    {
+                        await imgAvatar.CopyToAsync(stream);
+                    }
 
-                    if (System.IO.File.Exists(deletePath)) System.IO.File.Delete(deletePath);
+                    model.Avatar = avatarName;
                 }
-
-                string avatarName = NameGenerator.GenerateUniqName() + Path.GetExtension(imgAvatar.FileName);
-
-                string savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Avatars", avatarName);
-                using (var stream = System.IO.File.Create(savePath))
+                catch
                 {
-                    imgAvatar.CopyTo(stream);
-                }
+                    if (System.IO.File.Exists(newAvatarPath))
+                        System.IO.File.Delete(newAvatarPath);
 
-                model.Avatar = avatarName;
+                    throw;
+                }
             }
 
             #endregion
-
-            int currentUserId = int.Parse(User.GetUserId()!);
 
             var result = await _accountService.EditUserProfileAsync(model, currentUserId);
 
             switch (result)
             {
                 case EditProfileResult.Success:
+
+                    // Delete old avatar only after successful profile update.
+                    if (newAvatarPath != null && oldAvatar != "default.png")
+                    {
+                        string oldAvatarPath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot",
+                            "Avatars",
+                            oldAvatar);
+
+                        if (System.IO.File.Exists(oldAvatarPath))
+                            System.IO.File.Delete(oldAvatarPath);
+                    }
+
                     TempData["SuccessEditProfile"] = "True";
                     return Redirect("/UserPanel");
 
                 case EditProfileResult.UserNotFound:
-                    return NotFound();
+                    break;
 
                 case EditProfileResult.InvalidInputs:
-                    ModelState.AddModelError(string.Empty, "لطفاً همه فیلدهای الزامی را تکمیل کنید.");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        "لطفاً همه فیلدهای الزامی را تکمیل کنید.");
                     break;
 
                 case EditProfileResult.DuplicateUserName:
@@ -128,6 +161,19 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
                         "این کد ملی قبلاً ثبت شده است.");
                     break;
             }
+
+            // Profile update failed: remove the newly uploaded avatar.
+            if (newAvatarPath != null)
+            {
+                if (System.IO.File.Exists(newAvatarPath))
+                    System.IO.File.Delete(newAvatarPath);
+
+                // Restore the previous avatar filename
+                model.Avatar = oldAvatar;
+            }
+
+            if (result == EditProfileResult.UserNotFound)
+                return NotFound();
 
             return View(model);
         }
