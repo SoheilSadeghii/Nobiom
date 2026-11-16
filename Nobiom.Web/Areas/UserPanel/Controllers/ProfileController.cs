@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Nobiom.Application.Services.Interfaces;
 using Nobiom.Application.Converter;
-using Nobiom.Domain.ViewModels.Account;
-using Nobiom.Application.Security;
-using Nobiom.Application.Generators;
 using Nobiom.Application.Extensions;
+using Nobiom.Application.Generators;
+using Nobiom.Application.Security;
+using Nobiom.Application.Services.Interfaces;
+using Nobiom.Domain.Enums;
+using Nobiom.Domain.ViewModels.Account;
 
 namespace Nobiom.Web.Areas.UserPanel.Controllers
 {
@@ -55,6 +56,8 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
+            #region Avatar
+
             if (imgAvatar != null)
             {
                 if (!imgAvatar.ImageValidate())
@@ -69,7 +72,6 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
                     string deletePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/Avatars", model.Avatar);
 
                     if (System.IO.File.Exists(deletePath)) System.IO.File.Delete(deletePath);
-
                 }
 
                 string avatarName = NameGenerator.GenerateUniqName() + Path.GetExtension(imgAvatar.FileName);
@@ -83,13 +85,51 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
                 model.Avatar = avatarName;
             }
 
+            #endregion
+
             int currentUserId = int.Parse(User.GetUserId()!);
 
-            await _accountService.EditUserProfileAsync(model, currentUserId);
+            var result = await _accountService.EditUserProfileAsync(model, currentUserId);
 
-            TempData["SuccessEditProfile"] = "True";
+            switch (result)
+            {
+                case EditProfileResult.Success:
+                    TempData["SuccessEditProfile"] = "True";
+                    return Redirect("/UserPanel");
 
-            return Redirect("/UserPanel");
+                case EditProfileResult.UserNotFound:
+                    return NotFound();
+
+                case EditProfileResult.InvalidInputs:
+                    ModelState.AddModelError(string.Empty, "لطفاً همه فیلدهای الزامی را تکمیل کنید.");
+                    break;
+
+                case EditProfileResult.DuplicateUserName:
+                    ModelState.AddModelError(
+                        nameof(model.UserName),
+                        "این نام کاربری قبلاً ثبت شده است.");
+                    break;
+
+                case EditProfileResult.DuplicateMobile:
+                    ModelState.AddModelError(
+                        nameof(model.Mobile),
+                        "این شماره موبایل قبلاً ثبت شده است.");
+                    break;
+
+                case EditProfileResult.DuplicateEmail:
+                    ModelState.AddModelError(
+                        nameof(model.Email),
+                        "این ایمیل قبلاً ثبت شده است.");
+                    break;
+
+                case EditProfileResult.DuplicateNationalCode:
+                    ModelState.AddModelError(
+                        nameof(model.NationalCode),
+                        "این کد ملی قبلاً ثبت شده است.");
+                    break;
+            }
+
+            return View(model);
         }
 
         #endregion

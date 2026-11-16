@@ -135,19 +135,40 @@ namespace Nobiom.Application.Services.Implementation
             return false;
         }
 
-        public async Task<bool> EditUserProfileAsync(ProfileViewModel model, int userId)
+        public async Task<EditProfileResult> EditUserProfileAsync(ProfileViewModel model, int userId)
         {
+            #region Validation
+
+            if (string.IsNullOrWhiteSpace(model.UserName) ||
+                string.IsNullOrWhiteSpace(model.Email) ||
+                string.IsNullOrWhiteSpace(model.Mobile))
+            {
+                return EditProfileResult.InvalidInputs;
+            }
+
+            if (await _userRepository.IsExistEmailAsync(model.Email.FixEmail(), userId)) return EditProfileResult.DuplicateEmail;
+
+            if (await _userRepository.IsExistMobileAsync(model.Mobile, userId)) return EditProfileResult.DuplicateMobile;
+
+            if (!string.IsNullOrWhiteSpace(model.NationalCode) &&
+                await _userRepository.IsExistNationalCodeAsync(model.NationalCode, userId)) 
+                    return EditProfileResult.DuplicateNationalCode;
+
+            if (await _userRepository.IsExistUserNameAsync(model.UserName.FixUserName(), userId)) return EditProfileResult.DuplicateUserName;
+
+            #endregion
+
             var user = await _userRepository.GetUserByIdAsync(userId);
 
-            if (user == null) return false;
+            if (user == null) return EditProfileResult.UserNotFound;
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            user.UserName = model.UserName;
+            user.UserName = model.UserName.FixUserName();
             user.Mobile = model.Mobile;
             user.NationalCode = model.NationalCode;
             user.Mobile = model.Mobile;
-            if (!string.IsNullOrWhiteSpace(model.Email)) user.Email = model.Email;
+            user.Email = model.Email.FixEmail();
             user.Avatar = model.Avatar;
 
             if (model.Year.HasValue &&
@@ -163,7 +184,7 @@ namespace Nobiom.Application.Services.Implementation
 
             await _userRepository.SaveAsync();
 
-            return true;
+            return EditProfileResult.Success;
         }
     }
 }

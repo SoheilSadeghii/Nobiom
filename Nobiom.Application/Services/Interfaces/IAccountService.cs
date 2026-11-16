@@ -17,6 +17,6 @@ namespace Nobiom.Application.Services.Interfaces
         Task<bool> ChangeUserPassword(ChangePasswordViewModel model, int userId);
         Task<ProfileViewModel?> GetUserProfileAsync(int userId);
         Task<bool> IsCompleteProfileAsync(int userId);
-        Task<bool> EditUserProfileAsync(ProfileViewModel model, int userId);
+        Task<EditProfileResult> EditUserProfileAsync(ProfileViewModel model, int userId);
     }
 }

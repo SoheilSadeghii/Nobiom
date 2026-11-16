@@ -17,7 +17,7 @@ namespace Nobiom.Application.Mapper
             {
                 UserName = model.UserName.FixUserName(),
                 Email = model.Email.FixEmail(),
-                Avatar = "NoPhoto.jpg",
+                Avatar = "default.png",
                 CreateDate = DateTime.Now,
                 EmailActiveCode = NameGenerator.GenerateUniqName(),
                 IsActive = true,

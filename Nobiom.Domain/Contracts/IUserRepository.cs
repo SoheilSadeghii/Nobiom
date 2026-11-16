@@ -15,11 +15,15 @@ namespace Nobiom.Domain.Contracts
         Task DeleteAsync(int userId);
 
         Task<bool> IsExistUserNameAsync(string userName);
+        Task<bool> IsExistUserNameAsync(string userName, int userId);
         Task<bool> IsExistEmailAsync(string email);
+        Task<bool> IsExistEmailAsync(string email, int userId);
+        Task<bool> IsExistMobileAsync(string mobile, int userId);
+        Task<bool> IsExistNationalCodeAsync(string nationalCode, int userId);
 
         Task<User?> GetUserByActiveCodeAsync(string activeCode);
 
-        Task<User?>GetUserByUserNameOrEmailAsync(string userNameOrEmail);
+        Task<User?> GetUserByUserNameOrEmailAsync(string userNameOrEmail);
 
         Task SaveAsync();
 

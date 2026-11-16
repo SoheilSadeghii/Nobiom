@@ -52,6 +52,7 @@ namespace Nobiom.Domain.ViewModels.Account
         public string Mobile { get; set; } = string.Empty;
 
         [DisplayName("ایمیل")]
+        [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         [EmailAddress(ErrorMessage = "لطفا یک ایمیل معتبر وارد کنید")]
         public string? Email { get; set; }
     }

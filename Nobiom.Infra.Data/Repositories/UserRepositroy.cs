@@ -52,9 +52,37 @@ namespace Nobiom.Infra.Data.Repositories
             return await context.Users.AnyAsync(u => u.UserName == userName);
         }
 
+        public async Task<bool> IsExistUserNameAsync(string userName, int userId)
+        {
+            return await context.Users.AnyAsync(u =>
+            u.UserName == userName &&
+            u.Id != userId);
+        }
+
         public async Task<bool> IsExistEmailAsync(string email)
         {
             return await context.Users.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> IsExistEmailAsync(string email, int userId)
+        {
+            return await context.Users.AnyAsync(u =>
+            u.Email == email &&
+            u.Id != userId);
+        }
+
+        public async Task<bool> IsExistMobileAsync(string mobile, int userId)
+        {
+            return await context.Users.AnyAsync(u =>
+            u.Mobile == mobile &&
+            u.Id != userId);
+        }
+
+        public async Task<bool> IsExistNationalCodeAsync(string nationalCode, int userId)
+        {
+            return await context.Users.AnyAsync(u =>
+            u.NationalCode == nationalCode &&
+            u.Id != userId);
         }
 
         public async Task<User?> GetUserByActiveCodeAsync(string activeCode)
