@@ -108,9 +108,20 @@
                 </div>
                 <div class="col-lg-6 mb-3">
                     <label asp-for="Email" class="form-label"></label>
-                    <input asp-for="Email" class="form-control" />
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           id="Email" />
+
                     <span asp-validation-for="Email"
                           class="text-danger"></span>
+
+                    <small id="emailChangeWarning"
+                           class="text-warning d-block mt-2"
+                           style="min-height: 24px; visibility: hidden;">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        با تغییر ایمیل، از حساب کاربری خارج شده و نیاز به تأیید مجدد خواهید داشت.
+                    </small>
                 </div>
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn btn-primary">

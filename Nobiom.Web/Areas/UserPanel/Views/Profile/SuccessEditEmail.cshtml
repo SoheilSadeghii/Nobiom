@@ -1,0 +1,29 @@
+﻿@using Nobiom.Domain.ViewModels.Account
+
+@model ProfileViewModel
+
+@{
+    ViewData["Title"] = "تغییر ایمیل";
+}
+
+<div class="container">
+    <div class="alert alert-success p-3">
+        <h2>@Model.FirstName عزیز!</h2>
+
+        <p>
+            آدرس ایمیل حساب کاربری شما با موفقیت تغییر کرد.
+            به همین دلیل، برای حفظ امنیت حساب، لازم است ایمیل جدید خود را مجدداً تأیید کنید.
+        </p>
+
+        <p>
+            لینک فعال‌سازی به آدرس ایمیل جدید شما
+            <strong>@Model.Email</strong>
+            ارسال شده است.
+        </p>
+
+        <p class="text-muted">
+            لطفاً وارد ایمیل جدید خود شوید و روی لینک فعال‌سازی کلیک کنید.
+            تا پیش از تأیید ایمیل، امکان ورود مجدد به حساب کاربری خود را نخواهید داشت.
+        </p>
+    </div>
+</div>

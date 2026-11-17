@@ -47,5 +47,17 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        const emailInput = document.getElementById('Email');
+        const emailWarning = document.getElementById('emailChangeWarning');
+                
+        const originalEmail = emailInput.value.trim();
+
+        emailInput.addEventListener('input', function() {
+            const hasChanged = this.value.trim() !== originalEmail;
+
+            emailWarning.style.visibility =
+                hasChanged ? 'visible' : 'hidden';
+        });
     </script>
 }

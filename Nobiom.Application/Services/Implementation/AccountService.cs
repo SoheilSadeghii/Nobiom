@@ -151,8 +151,8 @@ namespace Nobiom.Application.Services.Implementation
             if (await _userRepository.IsExistMobileAsync(model.Mobile, userId)) return EditProfileResult.DuplicateMobile;
 
             if (!string.IsNullOrWhiteSpace(model.NationalCode) &&
-                await _userRepository.IsExistNationalCodeAsync(model.NationalCode, userId)) 
-                    return EditProfileResult.DuplicateNationalCode;
+                await _userRepository.IsExistNationalCodeAsync(model.NationalCode, userId))
+                return EditProfileResult.DuplicateNationalCode;
 
             if (await _userRepository.IsExistUserNameAsync(model.UserName.FixUserName(), userId)) return EditProfileResult.DuplicateUserName;
 
@@ -161,6 +161,24 @@ namespace Nobiom.Application.Services.Implementation
             var user = await _userRepository.GetUserByIdAsync(userId);
 
             if (user == null) return EditProfileResult.UserNotFound;
+            
+            var normalizedEmail = model.Email.FixEmail();
+
+            bool emailChanged = !string.Equals(
+                user.Email,
+                normalizedEmail,
+                StringComparison.OrdinalIgnoreCase
+            );
+
+            if (emailChanged)
+            {
+                if (await _userRepository.IsExistEmailAsync(normalizedEmail, userId))
+                    return EditProfileResult.DuplicateEmail;
+
+                user.Email = normalizedEmail;
+                user.IsEmailActive = false;
+                user.EmailActiveCode = NameGenerator.GenerateUniqName();
+            }
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
@@ -184,7 +202,9 @@ namespace Nobiom.Application.Services.Implementation
 
             await _userRepository.SaveAsync();
 
-            return EditProfileResult.Success;
+            return emailChanged
+                ? EditProfileResult.EmailVerificationRequired
+                : EditProfileResult.Success;
         }
     }
 }

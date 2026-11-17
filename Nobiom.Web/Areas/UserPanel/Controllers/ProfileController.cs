@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using Nobiom.Application.Converter;
 using Nobiom.Application.Extensions;
 using Nobiom.Application.Generators;
 using Nobiom.Application.Security;
 using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Enums;
+using Nobiom.Domain.Models.Users;
 using Nobiom.Domain.ViewModels.Account;
 
 namespace Nobiom.Web.Areas.UserPanel.Controllers
@@ -127,6 +131,22 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
 
                     TempData["SuccessEditProfile"] = "True";
                     return Redirect("/UserPanel");
+
+                case EditProfileResult.EmailVerificationRequired:
+
+                    await HttpContext.SignOutAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var register = new ProfileViewModel
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Email = model.Email
+                    };
+
+                    ViewBag.Subject = "به دلیل تغییر ایمیل نیاز به فعالسازی ایمیل مجدد هست";
+
+                    return View("SuccessEditEmail", register);
 
                 case EditProfileResult.UserNotFound:
                     break;

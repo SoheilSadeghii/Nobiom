@@ -12,6 +12,7 @@ namespace Nobiom.Domain.Enums
         DuplicateUserName,
         DuplicateMobile,
         DuplicateEmail,
-        DuplicateNationalCode
+        DuplicateNationalCode,
+        EmailVerificationRequired
     }
 }
