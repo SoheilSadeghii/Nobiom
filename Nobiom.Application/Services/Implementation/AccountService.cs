@@ -10,6 +10,7 @@ using Nobiom.Domain.Models.Users;
 using Nobiom.Domain.ViewModels.Account;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace Nobiom.Application.Services.Implementation
@@ -17,6 +18,50 @@ namespace Nobiom.Application.Services.Implementation
     public class AccountService(IUserRepository _userRepository)
         : IAccountService
     {
+        #region Private Helper Methods
+
+        /// <summary>
+        /// Creates a ClaimsPrincipal for the given user, matching the logic from Login.
+        /// </summary>
+        private ClaimsPrincipal CreateClaimsPrincipal(User user)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim("FullName", $"{user.FirstName} {user.LastName}"),
+                new Claim(ClaimTypes.Email, user.Email),
+            };
+
+            // Only add optional profile claims if ALL four are present and non-empty
+            if (!string.IsNullOrWhiteSpace(user.Mobile) &&
+                !string.IsNullOrWhiteSpace(user.FirstName) &&
+                !string.IsNullOrWhiteSpace(user.LastName) &&
+                !string.IsNullOrWhiteSpace(user.Avatar))
+            {
+                claims.Add(new Claim(ClaimTypes.MobilePhone, user.Mobile));
+                claims.Add(new Claim("FirstName", user.FirstName));
+                claims.Add(new Claim("LastName", user.LastName));
+                claims.Add(new Claim("Avatar", user.Avatar));
+            }
+
+            var identity = new ClaimsIdentity(claims, "Cookies");
+            return new ClaimsPrincipal(identity);
+        }
+
+        #endregion
+
+        #region Public Methods for Testing/Debugging
+
+        /// <summary>
+        /// Creates authentication claims for a user. Used internally for login and claims refresh.
+        /// </summary>
+        public ClaimsPrincipal CreateAuthenticationPrincipal(User user)
+        {
+            return CreateClaimsPrincipal(user);
+        }
+
+        #endregion
 
         public async Task<RegisterUserResult> RegisterAsync(RegisterViewModel model)
         {

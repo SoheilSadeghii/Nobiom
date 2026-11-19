@@ -4,6 +4,7 @@ using Nobiom.Domain.Models.Users;
 using Nobiom.Domain.ViewModels.Account;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace Nobiom.Application.Services.Interfaces
@@ -18,5 +19,6 @@ namespace Nobiom.Application.Services.Interfaces
         Task<ProfileViewModel?> GetUserProfileAsync(int userId);
         Task<bool> IsCompleteProfileAsync(int userId);
         Task<EditProfileResult> EditUserProfileAsync(ProfileViewModel model, int userId);
+        ClaimsPrincipal CreateAuthenticationPrincipal(User user);
     }
 }

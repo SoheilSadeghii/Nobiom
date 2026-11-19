@@ -10,6 +10,7 @@ using Nobiom.Application.Services.Interfaces;
 using Nobiom.Domain.Enums;
 using Nobiom.Domain.Models.Users;
 using Nobiom.Domain.ViewModels.Account;
+using System.Security.Claims;
 
 namespace Nobiom.Web.Areas.UserPanel.Controllers
 {
@@ -26,6 +27,51 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
         public ProfileController(IAccountService accountService)
         {
             _accountService = accountService;
+        }
+
+        #endregion
+
+        #region Private Helper Methods
+
+        /// <summary>
+        /// Refreshes the authenticated user's claims after profile updates.
+        /// This ensures profile changes (FirstName, LastName, Avatar, Mobile) are immediately visible.
+        /// </summary>
+        private async Task RefreshUserAuthenticationClaimsAsync(int userId)
+        {
+            // Verify user is authenticated
+            if (User?.Identity?.IsAuthenticated != true)
+                return;
+
+            // Fetch fresh user data from database
+            var user = await _accountService.GetUserByEmailOrUserNameAsync(User.GetUserName()!);
+            if (user == null)
+                return;
+
+            // Create fresh claims principal with updated user data
+            var principal = _accountService.CreateAuthenticationPrincipal(user);
+
+            // Preserve existing RememberMe setting
+            var existingTicket = await HttpContext.AuthenticateAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var properties = new AuthenticationProperties();
+
+            if (existingTicket?.Properties?.IsPersistent == true)
+            {
+                properties.IsPersistent = true;
+                // Preserve original expiration time if it exists
+                if (existingTicket.Properties.ExpiresUtc.HasValue)
+                {
+                    properties.ExpiresUtc = existingTicket.Properties.ExpiresUtc;
+                }
+            }
+
+            // Re-sign the user with updated claims
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                properties);
         }
 
         #endregion
@@ -128,6 +174,10 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
                         if (System.IO.File.Exists(oldAvatarPath))
                             System.IO.File.Delete(oldAvatarPath);
                     }
+
+                    // Refresh authentication claims with updated profile information
+                    // This ensures profile changes are immediately visible without requiring logout/login
+                    await RefreshUserAuthenticationClaimsAsync(currentUserId);
 
                     TempData["SuccessEditProfile"] = "True";
                     return Redirect("/UserPanel");
