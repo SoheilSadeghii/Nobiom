@@ -148,6 +148,9 @@ namespace Nobiom.Web.Areas.UserPanel.Controllers
 
                     return View("SuccessEditEmail", register);
 
+                case EditProfileResult.NoChanges:
+                    return Redirect("/UserPanel");
+
                 case EditProfileResult.UserNotFound:
                     break;
 

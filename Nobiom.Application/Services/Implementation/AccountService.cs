@@ -161,15 +161,38 @@ namespace Nobiom.Application.Services.Implementation
             var user = await _userRepository.GetUserByIdAsync(userId);
 
             if (user == null) return EditProfileResult.UserNotFound;
-            
+
+            var normalizedUserName = model.UserName.FixUserName();
             var normalizedEmail = model.Email.FixEmail();
 
             bool emailChanged = !string.Equals(
                 user.Email,
                 normalizedEmail,
-                StringComparison.OrdinalIgnoreCase
-            );
+                StringComparison.OrdinalIgnoreCase);
 
+            DateOnly? submittedBirthDate = null;
+
+            if (model.Year.HasValue &&
+                model.Month.HasValue &&
+                model.Day.HasValue)
+            {
+                var shamsiDate = $"{model.Year}/{model.Month:00}/{model.Day:00}";
+                submittedBirthDate = DateOnly.FromDateTime(shamsiDate.ToMiladi());
+            }
+
+            bool hasChanges =
+                user.FirstName != model.FirstName ||
+                user.LastName != model.LastName ||
+                user.UserName != normalizedUserName ||
+                user.Mobile != model.Mobile ||
+                user.NationalCode != model.NationalCode ||
+                emailChanged ||
+                user.Avatar != model.Avatar ||
+                user.BirthDate != submittedBirthDate;
+
+            if (!hasChanges)
+                return EditProfileResult.NoChanges;
+                        
             if (emailChanged)
             {
                 if (await _userRepository.IsExistEmailAsync(normalizedEmail, userId))

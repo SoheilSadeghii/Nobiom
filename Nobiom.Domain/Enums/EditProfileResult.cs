@@ -7,6 +7,7 @@ namespace Nobiom.Domain.Enums
     public enum EditProfileResult
     {
         Success,
+        NoChanges,
         UserNotFound,
         InvalidInputs,
         DuplicateUserName,
