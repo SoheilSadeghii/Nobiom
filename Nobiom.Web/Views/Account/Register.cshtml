@@ -1,0 +1,54 @@
+﻿@using Nobiom.Domain.ViewModels.Account
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "ثبت نام";
+}
+
+
+<!-- start of auth-container -->
+<div class="auth-container">
+    <div class="auth-title mb-3">ثبت نام</div>
+    <!-- start of auth-box -->
+    <div class="auth-box ui-box">
+        <!-- start of auth-form -->
+        <form id="registerForm" asp-action="Register" method="post" class="auth-form" data-disable-submit="@ViewData.ModelState.IsValid.ToString().ToLowerInvariant()">
+            <!-- start of form-element -->
+            <div class="form-element-row mb-2">
+                <input asp-for="UserName" type="text" class="form-control" placeholder="نام کاربری را وارد کنید">
+            </div>
+            <div class="form-element-row mb-2">
+                <input asp-for="Email" type="email" class="form-control" placeholder="someone@example.com">
+            </div>
+            <div class="form-element-row mb-2">
+                <input asp-for="Password" type="password" class="form-control" placeholder="کلمه عبور را وارد کنید">
+            </div>
+            <div class="form-element-row mb-2">
+                <input asp-for="RePassword" type="password" class="form-control" placeholder="تکرار کلمه عبور را وارد کنید">
+            </div>
+            <!-- end of form-element -->
+            <!-- start of form-element -->
+            <div class="form-element-row mb-3">
+                <button type="submit" class="btn btn-primary js-submit-once">
+                    ثبت نام
+                </button>
+            </div>
+            <!-- end of form-element -->
+            <!-- start of form-element -->
+            <div class="form-element-row">
+                <div class="mb-3">
+                    با ورود و یا ثبت نام در سایت شما <a href="#" class="link">شرایط وقوانین</a> استفاده
+                    از تمام سرویس های
+                    سایت و <a href="#" class="link">قوانین حریم خصوصی</a> آن را می‌پذیرید.
+                </div>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+            <!-- end of form-element -->
+        </form>
+        <!-- end of auth-form -->
+    </div>
+</div>
+<!-- end of auth-box -->
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

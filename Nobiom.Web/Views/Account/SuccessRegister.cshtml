@@ -1,0 +1,18 @@
+﻿@using Nobiom.Domain.ViewModels.Account
+@model RegisterViewModel 
+
+@{
+    ViewData["Title"] = "اتمام ثبت نام";
+}
+
+<div class="container">
+    <div class="alert alert-success p-3">
+        <h2>@Model.UserName خوش آمدید !</h2>
+        <p>
+            با تشکر از ثبت نام شما در سایت ، ایمیلی حاوی لینک فعال سازی به ایمیل '@Model.Email' ارسال شد .
+        </p>
+        <p class="text-muted">
+            لطفا وارد ایمیل خود شده و اکانت را فعال کنید تا بتوانید از سایت استفاده کنید
+        </p>
+    </div>
+</div>

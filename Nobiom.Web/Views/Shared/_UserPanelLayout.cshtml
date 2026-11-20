@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "_EshopLayout";
+}
+
+<div class="container">
+    <div class="row mb-5">
+        <div class="col-xl-3 col-lg-4 col-md-5 md-md-0 mb-4">
+            @await Component.InvokeAsync("UserPanel")
+        </div>
+        <div class="col-xl-9 col-lg-8 col-md-7">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        function ShowImage(input) {
+
+            if (input.files && input.files[0]) {
+
+                const file = input.files[0];
+
+                const allowedTypes = [
+                    'image/png',
+                    'image/jpeg',
+                    'image/webp'
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+                    alert('فرمت تصویر معتبر نیست.');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#imgAvatar').attr('src', e.target.result);
+                };
+
+                reader.onerror = function() {
+                    alert('خطا در بارگذاری تصویر.');
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        const emailInput = document.getElementById('Email');
+        const emailWarning = document.getElementById('emailChangeWarning');
+                
+        const originalEmail = emailInput.value.trim();
+
+        emailInput.addEventListener('input', function() {
+            const hasChanged = this.value.trim() !== originalEmail;
+
+            emailWarning.style.visibility =
+                hasChanged ? 'visible' : 'hidden';
+        });
+    </script>
+}

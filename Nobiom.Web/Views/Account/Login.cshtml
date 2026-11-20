@@ -1,0 +1,84 @@
+﻿@using Nobiom.Domain.ViewModels.Account
+@model LoginViewModel
+@{
+    ViewData["Title"] = "ورود به سایت";
+    TempData.Keep("Captcha");
+}
+
+<!-- start of auth-container -->
+<div class="auth-container">
+    <div class="auth-title mb-3"> ورود به سایت </div>
+    <!-- start of auth-box -->
+    <div class="auth-box ui-box">
+        <!-- start of auth-form -->
+        <form asp-action="Login" method="post" class="auth-form" data-disable-submit="@ViewData.ModelState.IsValid.ToString().ToLowerInvariant()">
+            <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+            <!-- start of form-element -->
+            <div class="form-element-row mb-1">
+                <input asp-for="UserNameOrEmail" class="form-control" placeholder="نام کاربری یا ایمیل">
+            </div>
+            <div class="form-element-row mb-1">
+                <input asp-for="Password" class="form-control" placeholder="کلمه عبور را وارد کنید">
+            </div>
+            <div class="form-element-row mb-1">
+                <div class="row g-2 align-items-center">
+                    <div class="col-4 d-flex align-items-center">
+                        <img src="@Model.ImageData"
+                             alt="Captcha"
+                             class="img-fluid rounded border w-100"
+                             style="height: 38px; object-fit: cover;" />
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="CaptchaAnswer" class="form-control" placeholder="کد امنیتی را وارد کنید">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-1 pt-1">
+                    <input asp-for="RememberMe" class="form-check" />
+                </div>
+                <div class="col-10">
+                    <p>مرا به خاطر بسپار </p>
+                </div>
+            </div>
+            @if (ViewBag.UserNotActivated != null)
+            {
+                <div class="form-element-row mb-2">
+                    <span class="text-danger">حساب کاربری شما فعال نشده است. لطفا ایمیل خود را بررسی کنید.</span>
+                </div>
+            }
+            <!-- end of form-element -->
+            <!-- start of form-element -->
+            <div class="form-element-row mb-3">
+                <button type="submit" class="btn btn-primary js-submit-once">
+                    ورود
+                </button>
+            </div>
+            <!-- end of form-element -->
+            <!-- start of form-element -->
+            <div class="form-element-row">
+                <div class="mb-3">
+                    <a href="#">
+                        کلمه عبورم را فراموش کرده ام .
+                    </a>
+                    <br />
+                    <br />
+                </div>
+                <div class="mb-3">
+                    با ورود و یا ثبت نام در سایت شما <a href="#" class="link">شرایط وقوانین</a> استفاده
+                    از تمام سرویس های
+                    سایت و <a href="#" class="link">قوانین حریم خصوصی</a> آن را می‌پذیرید.
+                </div>
+            </div>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <!-- end of form-element -->
+        </form>
+        <!-- end of auth-form -->
+    </div>
+    <!-- end of auth-box -->
+</div>
+<!-- start of auth-container -->
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
